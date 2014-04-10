@@ -1,3 +1,4 @@
+
 # necessary module imports
 import winsound
 import sys
@@ -17,7 +18,7 @@ morse_alph = {
 
 
 #
-# Begin defining function's                           #
+# Begin defining function's
 #
 
 
@@ -61,10 +62,14 @@ def menu():
 def translate_from_file():
     # read_from_file is ran then verified this information is passed to the
     # translate function.
-    if verify_input(read_from_file()):
-        pass
-    else:
+    user_input = read_from_file()
+    
+    if verify_input(user_input):
+        print('You tried to translate Invalid characters')
         translate_from_file()
+    else:
+        pass
+    print(translate(user_input))
 
 
 def read_from_file():
@@ -83,7 +88,6 @@ def read_from_file():
     print('NOTE: FILE MUST BE IN SAME DIRECTORY AS THIS PROGRAM')
     filename = input('Enter the filename to read from: ').lower()
     if filename[-4:] != '.txt':
-        print('.txt added')
         filename += '.txt'
     f = open(filename, 'r')
     user_input = f.read()
@@ -96,12 +100,13 @@ def get_user_input():
 
 
 def verify_input(user_input):
-    test_bool = True
+    test_bool = False
     for char in user_input:
         if char in morse_alph:
             pass
         else:
-            test_bool = False
+            test_bool = True
+            break
     return test_bool
 
 
@@ -110,7 +115,7 @@ def translate(user_input):
     for letter in user_input:
         string += morse_alph[letter]
         string += ' '
-    print(string)
+    return(string)
 
 
 def play_morse():
