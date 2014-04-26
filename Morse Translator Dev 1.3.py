@@ -1,11 +1,12 @@
 
+
 # necessary module imports
 import winsound
 import sys
 from time import sleep
 
 # The Morse Code alphabet to translate to and from
-morse_alph = {
+morse_alph_a = {
     'A': '.-',       'B': '-...',     'C': '-.-.',     'D': '-..',
     'E': '.',        'F': '..-.',     'G': '--.',      'H': '....',
     'I': '..',       'J': '.---',    'K': '-.-',       'L': '.-..',
@@ -20,6 +21,8 @@ morse_alph = {
     ')': '-.--..',   '"': '.-..-.',   '@': '.--.-.',   '=': '-...-',   ' ': ' '
 }
 
+morse_alph_b = dict(zip(morse_alph_a.values(), morse_alph_a
+                        .keys()))
 
 #
 # Begin defining function's                     #
@@ -65,12 +68,33 @@ def menu():
         if to_write == 'yes' or to_write == 'y':
             write_to_file(morse_code)
 
-    elif choice  '9':
+    elif choice == '9':
         quit()
 
     else:
         print('invalid choice')
         menu()
+
+
+def detect_translate(user_input):
+    """
+    Summary: Decides if a user input is in Morse code or not
+
+
+    Arguments: user_input - the users inputed string
+
+    Returns: morse or english
+    """
+    dit_dar_count = 0
+    for i in user_input:
+        if i == '-' or i == '.':
+            dit_dar_count += 1
+    print('dit_dar_count =',dit_dar_count)
+    print(len(user_input) / 2)
+    if len(user_input) / 2 < dit_dar_count:
+        return 'morse'
+    else:
+        return 'english'
 
 
 def translate_from_file():
@@ -83,7 +107,7 @@ def translate_from_file():
         translate_from_file()
     else:
         pass
-    return (translate(user_input))
+    return (translate(user_input, detect_translate()))
 
 
 def translate_directly():
@@ -96,7 +120,7 @@ def translate_directly():
             translate_from_file()
         else:
             pass
-        return (translate(user_input))
+        return (translate(user_input, detect_translate(user_input)))
 
 
 def read_from_file():
@@ -130,7 +154,7 @@ def get_user_input():
 def verify_input(user_input):
     test_bool = False
     for char in user_input:
-        if char in morse_alph:
+        if char in morse_alph_a:
             pass
         else:
             test_bool = True
@@ -138,11 +162,18 @@ def verify_input(user_input):
     return test_bool
 
 
-def translate(user_input):
+def translate(user_input, type):
     string = ''
-    for letter in user_input:
-        string += morse_alph[letter]
-        string += ' '
+    if type == 'english':
+        for letter in user_input:
+            string += morse_alph_a[letter]
+            string += ' '
+    elif type == 'morse':
+        for letter in user_input:
+            string += morse_alph_b[letter]
+            string += ' '
+    else:
+        raise NameError('invalid type in translate function')
     return(string)
 
 
